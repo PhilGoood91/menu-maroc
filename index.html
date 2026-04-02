@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Tables du Maroc — Commander</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --or: #c9993a; --or-clair: #e8c56e; --rouge: #8b1a1a; --rouge-clair: #c0392b;
+    --creme: #fdf6e3; --creme-fonce: #f0e4c8; --brun: #3d2010; --brun-clair: #6b3a1f;
+    --vert: #2d5a27; --texte: #2a1505; --ombre: rgba(61,32,16,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--brun);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(201,153,58,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(139,26,26,0.08) 0%, transparent 50%);
+    min-height: 100vh; color: var(--texte);
+  }
+  header {
+    background: linear-gradient(135deg, var(--brun) 0%, #5a2010 50%, var(--brun) 100%);
+    border-bottom: 3px solid var(--or);
+    padding: 28px 20px 20px; text-align: center; position: relative;
+  }
+  header::before, header::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, transparent, var(--or), transparent);
+  }
+  header::before { left: 24px; } header::after { right: 24px; }
+  .logo-star { font-size: 28px; color: var(--or); letter-spacing: 12px; display: block; margin-bottom: 6px; animation: shimmer 3s ease-in-out infinite; }
+  @keyframes shimmer { 0%,100%{opacity:0.7} 50%{opacity:1} }
+  h1 { font-family: 'Cinzel Decorative', serif; font-size: clamp(1.1rem,5vw,1.8rem); color: var(--or-clair); letter-spacing: 3px; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  .sous-titre { font-family: 'Amiri', serif; color: var(--creme-fonce); font-size: 1.05rem; margin-top: 6px; opacity: 0.85; font-style: italic; }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 20px 14px 60px; }
+
+  .tabs { display: flex; background: rgba(0,0,0,0.3); border-radius: 12px 12px 0 0; overflow: hidden; border: 1px solid var(--or); border-bottom: none; margin-top: 24px; }
+  .tab-btn { flex: 1; padding: 12px 6px; background: transparent; border: none; color: var(--creme-fonce); font-family: 'Amiri', serif; font-size: 0.85rem; cursor: pointer; transition: all 0.25s; border-right: 1px solid rgba(201,153,58,0.3); }
+  .tab-btn:last-child { border-right: none; }
+  .tab-btn.active { background: linear-gradient(180deg, var(--or) 0%, var(--brun-clair) 100%); color: var(--creme); font-weight: 700; }
+  .tab-btn:not(.active):hover { background: rgba(201,153,58,0.15); }
+
+  .panel { background: var(--creme); border: 1px solid var(--or); border-top: none; border-radius: 0 0 12px 12px; padding: 22px 16px; display: none; }
+  .panel.active { display: block; }
+
+  /* ID */
+  .id-section { background: linear-gradient(135deg, #fff9f0, var(--creme-fonce)); border: 1px solid var(--or); border-radius: 10px; padding: 18px; margin-bottom: 16px; display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+  .id-section label { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brun-clair); font-weight: 700; display: block; margin-bottom: 5px; }
+  .id-section input { border: 1.5px solid var(--or); border-radius: 6px; padding: 9px 14px; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; background: white; color: var(--texte); min-width: 160px; }
+  .id-section input:focus { outline: none; border-color: var(--rouge); box-shadow: 0 0 0 3px rgba(139,26,26,0.12); }
+  .btn-valider { background: linear-gradient(135deg, var(--rouge) 0%, var(--rouge-clair) 100%); color: white; border: none; border-radius: 6px; padding: 9px 20px; font-family: 'Amiri', serif; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 3px 10px rgba(139,26,26,0.3); transition: transform 0.15s; }
+  .btn-valider:hover { transform: translateY(-1px); }
+  .convive-actuel { font-family: 'Amiri', serif; font-size: 1.05rem; color: var(--brun-clair); padding: 4px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .badge-convive { background: linear-gradient(135deg, var(--or), var(--or-clair)); color: var(--brun); font-weight: 700; padding: 4px 14px; border-radius: 20px; font-size: 1rem; box-shadow: 0 2px 6px rgba(201,153,58,0.4); }
+
+  /* MENU */
+  .section-titre { font-family: 'Cinzel Decorative', serif; font-size: 0.9rem; color: var(--rouge); letter-spacing: 2px; padding: 14px 0 8px; border-bottom: 2px solid var(--or); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .section-titre::before { content: '✦'; color: var(--or); font-size: 0.75rem; }
+  .sous-section { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brun-clair); font-weight: 700; margin: 14px 0 8px; padding-left: 8px; border-left: 3px solid var(--or); }
+  .item { display: flex; justify-content: space-between; align-items: flex-start; padding: 9px 10px; border-radius: 7px; margin-bottom: 5px; transition: background 0.15s; cursor: pointer; border: 1.5px solid transparent; }
+  .item:hover { background: rgba(201,153,58,0.1); border-color: rgba(201,153,58,0.3); }
+  .item.selected { background: rgba(201,153,58,0.18); border-color: var(--or); }
+  .item-info { flex: 1; }
+  .item-nom { font-family: 'Amiri', serif; font-size: 1.05rem; color: var(--texte); font-weight: 700; }
+  .item-desc { font-size: 0.82rem; color: var(--rouge-clair); font-style: italic; margin-top: 2px; line-height: 1.3; }
+  .item-droite { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: 12px; }
+  .prix { font-family: 'Cinzel Decorative', serif; font-size: 0.9rem; color: var(--or); font-weight: 700; white-space: nowrap; }
+  .compteur { display: flex; align-items: center; gap: 5px; }
+  .btn-qte { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--or); background: white; color: var(--brun); font-size: 1rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; line-height: 1; }
+  .btn-qte:hover { background: var(--or); color: white; }
+  .qte-val { min-width: 22px; text-align: center; font-family: 'Amiri', serif; font-weight: 700; font-size: 1rem; color: var(--brun); }
+
+  /* ENVOYER */
+  .btn-envoyer { display: block; width: 100%; background: linear-gradient(135deg, var(--vert) 0%, #3a7a33 100%); color: white; border: none; border-radius: 8px; padding: 14px; font-family: 'Cinzel Decorative', serif; font-size: 0.82rem; letter-spacing: 1.5px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 15px rgba(45,90,39,0.4); transition: all 0.2s; }
+  .btn-envoyer:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,90,39,0.5); }
+  .btn-envoyer:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* STATUS */
+  .status-box { border-radius: 8px; padding: 12px 16px; margin-top: 14px; font-family: 'Amiri', serif; font-size: 1rem; text-align: center; display: none; }
+  .status-box.ok { background: rgba(45,90,39,0.12); border: 1.5px solid var(--vert); color: var(--vert); }
+  .status-box.err { background: rgba(139,26,26,0.1); border: 1.5px solid var(--rouge); color: var(--rouge); }
+  .status-box.loading { background: rgba(201,153,58,0.12); border: 1.5px solid var(--or); color: var(--brun-clair); }
+
+  /* RECAP */
+  .recap-convive { background: linear-gradient(135deg, #fff9f0, var(--creme-fonce)); border: 1px solid var(--or); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .recap-convive-titre { font-family: 'Cinzel Decorative', serif; font-size: 0.85rem; color: var(--brun-clair); border-bottom: 1px solid var(--or); padding-bottom: 7px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .recap-convive-titre span { background: var(--or); color: var(--brun); border-radius: 20px; padding: 2px 12px; font-size: 0.8rem; }
+  .recap-item { font-family: 'Amiri', serif; font-size: 1rem; color: var(--texte); display: flex; justify-content: space-between; padding: 3px 0; }
+  .recap-sous-total { font-weight: 700; color: var(--rouge); border-top: 1px dashed var(--or); margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-family: 'Amiri', serif; font-size: 1rem; }
+  .total-section { background: linear-gradient(135deg, var(--brun) 0%, #5a2010 100%); color: var(--creme); border-radius: 10px; padding: 16px 18px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .total-label { font-family: 'Amiri', serif; font-size: 1.15rem; }
+  .total-montant { font-family: 'Cinzel Decorative', serif; font-size: 1.3rem; color: var(--or-clair); }
+
+  .panier-vide { text-align: center; font-family: 'Amiri', serif; font-size: 1.1rem; color: #aaa; padding: 40px 0; font-style: italic; }
+  .note-garniture { background: rgba(45,90,39,0.08); border: 1px solid var(--vert); border-radius: 7px; padding: 10px 14px; margin: 10px 0; font-family: 'Amiri', serif; font-size: 0.92rem; color: var(--vert); font-style: italic; }
+  .notice { background: linear-gradient(135deg, rgba(139,26,26,0.08), rgba(201,153,58,0.08)); border-left: 3px solid var(--or); border-radius: 0 7px 7px 0; padding: 8px 12px; font-family: 'Amiri', serif; font-size: 0.9rem; color: var(--brun-clair); margin-bottom: 16px; }
+  .badge-count { background: var(--rouge); color: white; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; margin-left: 4px; vertical-align: middle; }
+
+  /* CONFIG WEBHOOK */
+  .config-box { background: rgba(201,153,58,0.1); border: 1.5px dashed var(--or); border-radius: 10px; padding: 16px; margin-bottom: 18px; }
+  .config-box label { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brun-clair); font-weight: 700; display: block; margin-bottom: 6px; }
+  .config-box input { width: 100%; border: 1.5px solid var(--or); border-radius: 6px; padding: 8px 12px; font-size: 0.88rem; background: white; color: var(--texte); font-family: monospace; }
+  .config-box input:focus { outline: none; border-color: var(--rouge); }
+  .config-note { font-family: 'Amiri', serif; font-size: 0.82rem; color: #888; margin-top: 5px; font-style: italic; }
+
+  .btn-reset { display: block; width: 100%; background: transparent; color: var(--rouge); border: 1.5px solid var(--rouge); border-radius: 8px; padding: 10px; font-family: 'Amiri', serif; font-size: 1rem; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
+  .btn-reset:hover { background: var(--rouge); color: white; }
+
+  @media print {
+    header, .tabs, .panel:not(#panel-recap) { display: none !important; }
+    #panel-recap { display: block !important; border: none; }
+    body { background: white; }
+    .btn-reset { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo-star">✦ ✦ ✦</span>
+  <h1>Les Tables du Maroc</h1>
+  <p class="sous-titre">Système de commande en ligne</p>
+</header>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('commander', this)">🍽 Commander</button>
+    <button class="tab-btn" onclick="showTab('recap', this)" id="tab-recap">📋 Récapitulatif</button>
+    
+  </div>
+
+  <!-- ══ PANEL COMMANDER ══ -->
+  <div class="panel active" id="panel-commander">
+
+    <div class="id-section">
+      <div>
+        <label for="nom-input">Votre prénom :</label>
+        <input type="text" id="nom-input" placeholder="Ex : Marie, Thomas…" maxlength="30">
+      </div>
+      <button class="btn-valider" onclick="validerConvive()">✓ Valider</button>
+      <div class="convive-actuel" id="convive-actuel" style="display:none">
+        Commande pour : <span class="badge-convive" id="badge-nom"></span>
+      </div>
+    </div>
+
+    <div class="notice">ℹ️ Saisissez votre prénom, choisissez vos plats, puis appuyez sur <strong>Envoyer ma commande</strong>.</div>
+
+    <!-- ENTRÉES -->
+    <div class="section-titre">Entrées</div>
+    <div id="entrees"></div>
+
+    <!-- TAGINES -->
+    <div class="section-titre">Tagines</div>
+    <div class="sous-section">🐓 Tagines de Poulet</div>
+    <div id="tagines-poulet"></div>
+    <div class="sous-section">🐑 Tagines d'Agneau</div>
+    <div id="tagines-agneau"></div>
+    <div class="sous-section">🐟 Tagines de Poisson</div>
+    <div id="tagines-poisson"></div>
+
+    <!-- GRILLADES -->
+    <div class="section-titre">Grillades</div>
+    <div id="grillades"></div>
+    <div class="note-garniture">Garnitures au choix : Pommes sautées à l'ail · Riz à l'oriental · Haricots verts · Salade marocaine · Frites</div>
+
+    <!-- COUSCOUS -->
+    <div class="section-titre">Couscous</div>
+    <div id="couscous"></div>
+    <div class="sous-section">Suppléments</div>
+    <div id="supplements"></div>
+
+    <!-- BOISSONS -->
+    <div class="section-titre">Boissons fraîches</div>
+    <div id="boissons"></div>
+
+    <button class="btn-envoyer" id="btn-envoyer" onclick="envoyerCommande()">✉ Envoyer ma commande sur le Drive</button>
+    <div class="status-box" id="status-box"></div>
+
+  </div>
+
+  <!-- ══ PANEL RECAP ══ -->
+  <div class="panel" id="panel-recap">
+    <div class="section-titre">Récapitulatif de mes commandes envoyées</div>
+    <div id="recap-contenu"></div>
+    <button class="btn-reset" onclick="resetLocal()">🗑 Effacer mon récapitulatif local</button>
+    <p style="font-family:'Amiri',serif;font-size:0.88rem;color:#888;margin-top:10px;text-align:center;font-style:italic;">
+      Le récapitulatif complet de toute la table est visible dans le Google Sheet sur le Drive.
+    </p>
+  </div>
+
+      <div class="config-box">
+      <label>🔗 URL du Google Apps Script (webhook) :</label>
+      <input type="text" id="webhook-url" placeholder="https://script.google.com/macros/s/VOTRE_ID/exec" oninput="sauverWebhook()">
+      <p class="config-note">Coller ici l'URL générée après déploiement du script Google. Elle est sauvegardée dans votre navigateur.</p>
+    </div>
+    <div class="notice">
+      📋 <strong>Comment obtenir l'URL :</strong><br>
+      1. Ouvrir <a href="https://script.google.com" target="_blank" style="color:var(--rouge)">script.google.com</a> → Nouveau projet<br>
+      2. Coller le code du fichier <code>Code.gs</code> fourni<br>
+      3. Cliquer <strong>Déployer → Nouveau déploiement</strong><br>
+      4. Type : <em>Application Web</em> · Accès : <em>Tout le monde</em><br>
+      5. Copier l'URL et la coller ici
+    </div>
+  </div>
+
+</div>
+
+<script>
+const MENU = {
+  entrees: [
+    {id:'e1',nom:'Salade Mechouia',desc:'Tomate et poivrons grillés',prix:6},
+    {id:'e2',nom:'Zaalouk',desc:'Caviar d\'aubergines',prix:6},
+    {id:'e3',nom:'Salade marocaine',desc:'Poivrons grillés, tomate, oignons, coriandre, huile d\'olive',prix:6},
+    {id:'e4',nom:'Assortiment de briouates',desc:'Poulet, fromage, kefta',prix:7},
+    {id:'e5',nom:'Avocat aux crevettes',desc:'Sauce cocktail',prix:7},
+    {id:'e6',nom:'Brique à l\'œuf',desc:'',prix:5},
+    {id:'e7',nom:'Brique viande hachée',desc:'',prix:7},
+    {id:'e8',nom:'Brique crevette',desc:'',prix:7},
+    {id:'e9',nom:'Chekchouka',desc:'Ratatouille maison : poivrons, tomate, œuf, oignons, ail, merguez',prix:9},
+    {id:'e10',nom:'Pastilla au poulet',desc:'',prix:11},
+  ],
+  taginesPoulet:[
+    {id:'tp1',nom:'Tagine poulet fruits secs',desc:'Raisin sec, pruneau, abricot, noix, figue',prix:20},
+    {id:'tp2',nom:'Tagine poulet pruneau amandes',desc:'',prix:19},
+    {id:'tp3',nom:'Tagine poulet oignon raisin sec',desc:'',prix:19},
+    {id:'tp4',nom:'Tagine poulet olive PDT citron confit',desc:'',prix:19},
+    {id:'tp5',nom:'Tagine poulet aux légumes',desc:'PDT, carottes, olive, oignon, haricots verts, petits pois',prix:19},
+  ],
+  taginesAgneau:[
+    {id:'ta1',nom:'Tagine agneau pruneau amandes',desc:'',prix:21},
+    {id:'ta2',nom:'Tagine agneau oignon raisin sec',desc:'',prix:21},
+    {id:'ta3',nom:'Tagine agneau fruits secs',desc:'Raisin sec, pruneau, abricot, noix, figue',prix:21},
+    {id:'ta4',nom:'Tagine agneau artichaut petits pois oignon',desc:'',prix:21},
+    {id:'ta5',nom:'Tagine agneau aubergine',desc:'',prix:21},
+    {id:'ta6',nom:'Tagine agneau olive PDT citron confit',desc:'',prix:21},
+    {id:'ta7',nom:'Tagine agneau aux légumes',desc:'PDT, carottes, olive, oignon, haricots verts, petits pois',prix:21},
+    {id:'ta8',nom:'Kefta œuf',desc:'',prix:20},
+  ],
+  taginesPoisson:[
+    {id:'tpo1',nom:'Tagine saumon',desc:'Ail, safran, coriandre, carotte, tomate, citron, olive, poivron',prix:22},
+    {id:'tpo2',nom:'Tagine poisson du jour (lotte/bar/dorade)',desc:'Selon arrivage',prix:25},
+  ],
+  grillades:[
+    {id:'g1',nom:'Grillade Table du Maroc',desc:'Salade marocaine, briouate kefta, 2 merguez, 2 brochettes d\'agneau',prix:24},
+    {id:'g2',nom:'Méchoui',desc:'Épaule d\'agneau grillée au four',prix:24},
+    {id:'g3',nom:'Brochettes d\'agneau (2 pièces)',desc:'',prix:20},
+    {id:'g4',nom:'Poulet rôti',desc:'',prix:16},
+    {id:'g5',nom:'Merguez (3 pièces)',desc:'',prix:16},
+    {id:'g6',nom:'Brochettes de poulet (2 pièces)',desc:'Marinées à la marocaine',prix:12},
+  ],
+  couscous:[
+    {id:'c1',nom:'Couscous Mechoui',desc:'Épaule d\'agneau grillée au four',prix:24},
+    {id:'c2',nom:'Couscous Royal',desc:'1 brochette agneau, 1 merguez, 1 boulette, agneau, poulet',prix:24},
+    {id:'c3',nom:'Couscous d\'agneau',desc:'',prix:21},
+    {id:'c4',nom:'Couscous Tfaya',desc:'Poulet, bouillon sucré cannelle, pois chiche, raisin sec, oignons, fleur d\'oranger',prix:22},
+    {id:'c5',nom:'Couscous de Poulet',desc:'',prix:18},
+    {id:'c6',nom:'Couscous Merguez',desc:'',prix:18},
+    {id:'c7',nom:'Couscous Boulettes',desc:'',prix:18},
+    {id:'c8',nom:'Couscous végétarien',desc:'',prix:12},
+  ],
+  supplements:[
+    {id:'s1',nom:'Supplément boulette ou merguez (2 pièces)',desc:'',prix:4},
+    {id:'s2',nom:'Supplément brochette (1 pièce)',desc:'',prix:6},
+  ],
+  boissons:[
+    {id:'b1',nom:'Vittel / Evian 50cl',desc:'',prix:3.20},
+    {id:'b2',nom:'Vittel / Evian 1L',desc:'',prix:5.20},
+    {id:'b3',nom:'San Pellegrino 50cl',desc:'',prix:3.20},
+    {id:'b4',nom:'San Pellegrino 1L',desc:'',prix:5.20},
+    {id:'b5',nom:'Perrier 25cl',desc:'',prix:2.90},
+    {id:'b6',nom:'Coca-Cola 25cl',desc:'',prix:2.90},
+    {id:'b7',nom:'Orangina / Fanta',desc:'',prix:2.90},
+    {id:'b8',nom:'Schweppes',desc:'',prix:2.90},
+    {id:'b9',nom:'Jus de fruits',desc:'Orange, ananas, abricot, pomme, tomate',prix:2.90},
+    {id:'b10',nom:'Limonade',desc:'',prix:2.90},
+    {id:'b11',nom:'Mojito',desc:'Citron vert, menthe',prix:4.90},
+    {id:'b12',nom:'Cocktail',desc:'Ananas, citron, orange, grenadine',prix:4.90},
+    {id:'b13',nom:'Smoothie Les Tables du Maroc',desc:'2 fruits au choix : fraise, ananas, citron, mangue, banane, menthe',prix:6.90},
+    {id:'b14',nom:'Jus avocat amandes dattes',desc:'',prix:6.90},
+  ]
+};
+
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwnKm8fB_-O9lu06GXl2i87t1xaIUc7CtVVeTrNXcSMRki_RC5wlLgtIPB9iWSU3GkkEA/exec';
+
+let conviveCourant = '';
+let selectionCourante = {};
+let historiqueEnvoye = JSON.parse(localStorage.getItem('tdm_historique') || '[]');
+
+function getWebhookUrl() { return WEBHOOK_URL; }
+
+window.addEventListener('DOMContentLoaded', () => {
+  renderMenu();
+  renderRecap();
+});
+
+function getAllItems() {
+  return [...MENU.entrees,...MENU.taginesPoulet,...MENU.taginesAgneau,...MENU.taginesPoisson,...MENU.grillades,...MENU.couscous,...MENU.supplements,...MENU.boissons];
+}
+function getItemById(id) { return getAllItems().find(i => i.id === id); }
+
+function renderItems(liste, containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  liste.forEach(item => {
+    const qte = selectionCourante[item.id] || 0;
+    const div = document.createElement('div');
+    div.className = 'item' + (qte > 0 ? ' selected' : '');
+    div.id = 'item-' + item.id;
+    div.innerHTML = `
+      <div class="item-info">
+        <div class="item-nom">${item.nom}</div>
+        ${item.desc ? `<div class="item-desc">${item.desc}</div>` : ''}
+      </div>
+      <div class="item-droite">
+        <span class="prix">${item.prix.toFixed(2).replace('.',',')} €</span>
+        <div class="compteur">
+          <button class="btn-qte" onclick="modifQte('${item.id}',-1,event)">−</button>
+          <span class="qte-val" id="qte-${item.id}">${qte}</span>
+          <button class="btn-qte" onclick="modifQte('${item.id}',1,event)">+</button>
+        </div>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function renderMenu() {
+  renderItems(MENU.entrees,'entrees');
+  renderItems(MENU.taginesPoulet,'tagines-poulet');
+  renderItems(MENU.taginesAgneau,'tagines-agneau');
+  renderItems(MENU.taginesPoisson,'tagines-poisson');
+  renderItems(MENU.grillades,'grillades');
+  renderItems(MENU.couscous,'couscous');
+  renderItems(MENU.supplements,'supplements');
+  renderItems(MENU.boissons,'boissons');
+}
+
+function validerConvive() {
+  const val = document.getElementById('nom-input').value.trim();
+  if (!val) { alert('Veuillez saisir votre prénom.'); return; }
+  conviveCourant = val;
+  selectionCourante = {};
+  renderMenu();
+  document.getElementById('convive-actuel').style.display = 'flex';
+  document.getElementById('badge-nom').textContent = conviveCourant;
+  setStatus('');
+}
+
+function modifQte(itemId, delta, evt) {
+  evt && evt.stopPropagation();
+  if (!conviveCourant) { alert('Veuillez d\'abord saisir votre prénom.'); return; }
+  const actuelle = selectionCourante[itemId] || 0;
+  const nouvelle = Math.max(0, actuelle + delta);
+  if (nouvelle === 0) delete selectionCourante[itemId];
+  else selectionCourante[itemId] = nouvelle;
+  const qteEl = document.getElementById('qte-' + itemId);
+  if (qteEl) qteEl.textContent = nouvelle;
+  const itemEl = document.getElementById('item-' + itemId);
+  if (itemEl) itemEl.classList.toggle('selected', nouvelle > 0);
+}
+
+function setStatus(msg, type='') {
+  const el = document.getElementById('status-box');
+  if (!msg) { el.style.display='none'; return; }
+  el.textContent = msg;
+  el.className = 'status-box ' + type;
+  el.style.display = 'block';
+}
+
+async function envoyerCommande() {
+  if (!conviveCourant) { alert('Veuillez saisir votre prénom.'); return; }
+  const items = Object.entries(selectionCourante)
+    .filter(([,q]) => q > 0)
+    .map(([id, qte]) => { const item = getItemById(id); return {nom: item.nom, qte, prix: item.prix}; });
+
+  if (items.length === 0) { alert("Vous n'avez sélectionné aucun plat."); return; }
+
+  const btn = document.getElementById('btn-envoyer');
+  btn.disabled = true;
+  setStatus('⏳ Envoi en cours…', 'loading');
+
+  try {
+    // SOLUTION CORS : text/plain évite le preflight OPTIONS bloqué par Apps Script
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ convive: conviveCourant, items })
+    });
+
+    // Attendre que Apps Script traite
+    await new Promise(r => setTimeout(r, 1500));
+
+    // Sauvegarder localement
+    historiqueEnvoye.push({ convive: conviveCourant, items, timestamp: new Date().toLocaleString('fr-FR') });
+    localStorage.setItem('tdm_historique', JSON.stringify(historiqueEnvoye));
+
+    setStatus('✅ Commande de ' + conviveCourant + ' envoyée avec succès sur le Drive !', 'ok');
+
+    // Reset
+    selectionCourante = {};
+    conviveCourant = '';
+    document.getElementById('convive-actuel').style.display = 'none';
+    document.getElementById('nom-input').value = '';
+    renderMenu();
+    renderRecap();
+
+  } catch (err) {
+    setStatus('❌ Erreur : ' + err.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderRecap() {
+  const el = document.getElementById('recap-contenu');
+  if (historiqueEnvoye.length === 0) {
+    el.innerHTML = '<div class="panier-vide">Aucune commande envoyée pour l\'instant.</div>';
+    return;
+  }
+  let html = '';
+  let grandTotal = 0;
+  historiqueEnvoye.forEach(cmd => {
+    let sous = cmd.items.reduce((acc, i) => acc + i.prix * i.qte, 0);
+    grandTotal += sous;
+    let lignes = cmd.items.map(i => `<div class="recap-item"><span>${i.nom} × ${i.qte}</span><span>${(i.prix*i.qte).toFixed(2).replace('.',',')} €</span></div>`).join('');
+    html += `<div class="recap-convive">
+      <div class="recap-convive-titre">${cmd.convive} <span>${sous.toFixed(2).replace('.',',')} €</span></div>
+      <div style="font-size:0.78rem;color:#aaa;font-family:'Amiri',serif;margin-bottom:6px;">${cmd.timestamp}</div>
+      ${lignes}
+    </div>`;
+  });
+  html += `<div class="total-section"><span class="total-label">💰 Total envoyé</span><span class="total-montant">${grandTotal.toFixed(2).replace('.',',')} €</span></div>`;
+  el.innerHTML = html;
+}
+
+function resetLocal() {
+  if (!confirm('Effacer l\'historique local ? (Le Google Sheet n\'est pas modifié)')) return;
+  historiqueEnvoye = [];
+  localStorage.removeItem('tdm_historique');
+  renderRecap();
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'recap') renderRecap();
+}
+</script>
+</body>
+</html>
